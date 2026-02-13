@@ -4,6 +4,7 @@ import soundfile as sf
 import torchaudio as ta
 import numpy as np
 import torch
+from torch.utils.data import DataSet, DataLoader
 import librosa
 from dataset import dataSet as ds
 
@@ -12,5 +13,7 @@ train_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/train/")
 val_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/validation/")
 test_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/test/")
 
-trackset = Dataset(train_root)
+trackset = ds(train_root)
+
+
 
