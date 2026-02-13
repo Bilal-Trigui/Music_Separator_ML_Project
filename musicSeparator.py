@@ -13,7 +13,8 @@ train_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/train/")
 val_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/validation/")
 test_root = pl.Path("/media/bilal/HardDrive2/musdb18hq/test/")
 
+#wrapping dataset into a dataloader
 trackset = ds(train_root)
-
+track_loader = DataLoader(trackset, batch_size=4, shuffle=True, num_workers=2)
 
 
