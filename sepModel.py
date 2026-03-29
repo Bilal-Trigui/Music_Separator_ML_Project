@@ -7,19 +7,19 @@ class seperatorModel(nn.Module):
         #goes through three levels of encoding in order to give the model the long range context
         #required for understanding the big picture of the spectrogram
         self.enc1 = nn.Sequential(
-            nn.Conv2d(1, 16, 3, paddings=1),
+            nn.Conv2d(1, 16, 3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
 
         self.enc2 = nn.Sequential(
-            nn.Conv2d(16, 32, 3, paddings=1),
+            nn.Conv2d(16, 32, 3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
 
         self.enc3 = nn.Sequential(
-            nn.Conv2d(32, 64, 3, paddings=1),
+            nn.Conv2d(32, 64, 3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2)
         )
@@ -37,26 +37,25 @@ class seperatorModel(nn.Module):
             nn.ReLU()
         )
 
-        self.dec3 = nn.Sequential(
+        self.dec1 = nn.Sequential(
             nn.ConvTranspose2d(16, 4, 2, stride=2),
             nn.ReLU()
         )
 
     def forward(self, x):
-
-
         x = x.unsqueeze(1)
-
-        #encodes spectrogram data
         e1 = self.enc1(x)
         e2 = self.enc2(e1)
         e3 = self.enc3(e2)
-
-        #decodes spectrogram data with the fine detail data from earlier
-        d3 = self.dec3(e3) + e2
-        d2 = self.dec2(d3) + e1
+        
+        d3 = self.dec3(e3)
+        d3 = d3[:, :, :e2.shape[2], :e2.shape[3]] + e2  # crop to match
+        
+        d2 = self.dec2(d3)
+        e1_cropped = e1[:, :, :d2.shape[2], :d2.shape[3]]
+        d2 = d2 + e1_cropped  # crop to match
+        
         output = self.dec1(d2)
-
         return output
 
 
