@@ -25,18 +25,19 @@ train_loader = DataLoader(training_set, batch_size=4, shuffle=True, num_workers=
 
 #initalizes device to run the training, model to be trained, and the opitmizer for the model
 device = "cuda" if torch.cuda.is_available() else "cpu"
+print(device)
 model = sm().to(device)
-optimizer = optim.Adam(model.parameters(), lr=1e-4)
+optimizer = optim.Adam(model.parameters(), lr=1e-2)
 
 #loop through the training data and lowers loss with every iteration
-for epoch in range(5):
+for epoch in range(10):
     total_loss = 0
     for mix, stems in train_loader:
         mix, stems = mix.to(device), stems.to(device)
 
         pred = model(mix)
         stems_cropped = stems[:, :, :pred.shape[2], :pred.shape[3]]
-        loss = F.mse_loss(pred, stems_cropped)
+        loss = F.l1_loss(pred, stems_cropped)
 
         #optimizes the cost of training by recalculating the gradient vector
         #and moving in the direction of the gradient vector

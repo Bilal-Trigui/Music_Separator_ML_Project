@@ -50,6 +50,7 @@ class dataSet(Dataset):
 
         #creates tensors for all the audio tracks using logorithimic spectrogram data
         mix_log = torch.tensor(librosa.amplitude_to_db(np.abs(librosa.stft(mix, n_fft=self.n_fft, hop_length=self.hop_length))), dtype=torch.float32)
+        mix_log = mix_log.unsqueeze(0)
 
         stem_logs = torch.stack([
             torch.tensor(librosa.amplitude_to_db(np.abs(librosa.stft(vocals, n_fft=self.n_fft, hop_length=self.hop_length))), dtype=torch.float32),

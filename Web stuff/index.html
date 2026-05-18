@@ -1,0 +1,156 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stemify</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+
+  <aside class="sidebar">
+
+    <div>
+
+      <div class="logo">
+        <div class="logo-bars">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <h1>Stemify</h1>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-item active">Home</div>
+        <div class="nav-item">History</div>
+        <div class="nav-item">Projects</div>
+        <div class="nav-item">Settings</div>
+        <div class="nav-item">Help</div>
+      </nav>
+
+    </div>
+
+    <div class="user">
+      User
+    </div>
+
+  </aside>
+
+  <!-- Main Content -->
+
+  <main class="main">
+
+    <h1 class="title">Separate your song into stems</h1>
+
+    <p class="subtitle">
+      Upload a song file and split it into Vocals, Drums, Bass, and Other.
+    </p>
+
+    <!-- Upload -->
+
+    <section class="upload-box">
+
+      <div class="upload-icon">⬆</div>
+
+      <h2>Drag & Drop Audio File</h2>
+
+      <p>
+        Supports MP3, WAV, FLAC, and M4A
+      </p>
+
+      <button class="upload-btn">
+        Browse Files
+      </button>
+
+    </section>
+
+    <!-- Recent -->
+
+    <h2 class="section-title">Recent Separations</h2>
+
+    <section class="track-card">
+
+      <div class="song-info">
+        <div class="song-title">Midnight Drive.mp3</div>
+
+        <div class="song-meta">
+          3:42 • 65.4 MB
+        </div>
+      </div>
+
+      <!-- Vocals -->
+
+      <div class="stem-row">
+        <div class="stem-name">Vocals</div>
+        <div class="waveform"></div>
+        <button class="play-btn">Play</button>
+        <button class="download-btn">Download</button>
+      </div>
+
+      <!-- Drums -->
+
+      <div class="stem-row">
+        <div class="stem-name">Drums</div>
+        <div class="waveform"></div>
+        <button class="play-btn">Play</button>
+        <button class="download-btn">Download</button>
+      </div>
+
+      <!-- Bass -->
+
+      <div class="stem-row">
+        <div class="stem-name">Bass</div>
+        <div class="waveform"></div>
+        <button class="play-btn">Play</button>
+        <button class="download-btn">Download</button>
+      </div>
+
+      <!-- Other -->
+
+      <div class="stem-row">
+        <div class="stem-name">Other</div>
+        <div class="waveform"></div>
+        <button class="play-btn">Play</button>
+        <button class="download-btn">Download</button>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      Fast • Secure • Private
+    </div>
+
+  </main>
+
+</body>
+</html># Project the centre of square (col=7, row=7) into image space
+    square_center = np.array([7.6, 7.6, 1.0]) #7.85 b/c the center of the square has a chess peice
+    img_pt = H @ square_center
+    cx = img_pt[0] / img_pt[2]
+    cy = img_pt[1] / img_pt[2]
+
+    # Sample a small patch around that centre
+    pad = 1
+    x1 = max(0, int(cx) - pad)
+    x2 = min(image.shape[1], int(cx) + pad)
+    y1 = max(0, int(cy) - pad)
+    y2 = min(image.shape[0], int(cy) + pad)
+
+    patch = image[y1:y2, x1:x2]
+    gray = cv2.cvtColor(patch, cv2.COLOR_BGR2GRAY) if patch.ndim == 3 else patch
+    mean_brightness = float(np.mean(gray))
+
+
+    """
+    creates a threshold for the mean_brightness value in order to avoid hard coded values
+    """
+    threshold = (float(np.min(gray)) + float(np.max(gray))) / 2
+    return "light" if mean_brightness > threshold else "dark"
