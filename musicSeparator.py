@@ -1,5 +1,6 @@
 #importing libraries
 import pathlib as pl
+import time
 import soundfile as sf
 import numpy as np
 
@@ -27,10 +28,16 @@ train_loader = DataLoader(training_set, batch_size=4, shuffle=True, num_workers=
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(device)
 model = sm().to(device)
-optimizer = optim.Adam(model.parameters(), lr=1e-2)
+optimizer = optim.Adam(model.parameters(), lr=10**-3.5)
+
+num_epochs = 500
+checkpoint_every = 10
+checkpoint_dir = pl.Path("checkpoints")
+checkpoint_dir.mkdir(exist_ok=True)
 
 #loop through the training data and lowers loss with every iteration
-for epoch in range(10):
+for epoch in range(num_epochs):
+    start_time = time.time()
     total_loss = 0
     for mix, stems in train_loader:
         mix, stems = mix.to(device), stems.to(device)
@@ -47,6 +54,11 @@ for epoch in range(10):
 
         total_loss += loss.item()
 
-    print(f"Epoch {epoch+1} | Loss: {total_loss/len(train_loader):.4f}")
+    elapsed = time.time() - start_time
+    print(f"Epoch {epoch+1} | Loss: {total_loss/len(train_loader):.4f} | {elapsed:.1f}s")
+
+    #periodic safety snapshot so a long run isn't all-or-nothing
+    if (epoch + 1) % checkpoint_every == 0:
+        torch.save(model.state_dict(), checkpoint_dir / f"separator_epoch{epoch+1}.pth")
 
 torch.save(model.state_dict(), "separator.pth")

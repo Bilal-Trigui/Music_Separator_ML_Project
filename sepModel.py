@@ -53,10 +53,9 @@ class seperatorModel(nn.Module):
             nn.Conv2d(64, 32, 3, padding=1),   # 32 + 32 from skip
             nn.ReLU()
         )
-        self.dec1 = nn.Sequential(
-            nn.ConvTranspose2d(32, 4, 2, stride=2),
-            nn.ReLU()
-        )
+        #no activation here: targets are dB-scale spectrograms, which are
+        #mostly negative, so a final ReLU would clamp/kill the output
+        self.dec1 = nn.ConvTranspose2d(32, 4, 2, stride=2)
 
     def forward(self, x):
         e1 = self.enc1(x)
