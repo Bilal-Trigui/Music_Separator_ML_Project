@@ -63,13 +63,7 @@ The model uses the mixture as its input and the individual stems as the targets 
 * FFmpeg
 * CUDA
 
-## Current Status
-
-This project is still **in development**.
-
-The basic training and inference pipeline has been created, but there is still a lot that can be improved, especially the quality of the separated audio.
-
-Some areas I plan to work on include:
+## Future Work
 
 * Improving the model architecture
 * Improving separation quality
